@@ -37,16 +37,11 @@ PROCEDURE DIVISION.
          READ DIRECTIONS INTO WS-DIRECTIONS
             AT END MOVE 'Y' TO WS-EOF
             NOT AT END
-              DISPLAY WS-DIRECTIONS
-              DISPLAY WS-MAGNITUDE
               SET Raw-Magnitude to WS-MAGNITUDE
-              *> INSPECT WS-MAGNITUDE REPLACING ALL SPACES BY ''
-              DISPLAY Raw-Magnitude
+              *> https://community.microfocus.com/microfocus/cobol/rm_cobol/w/knowledge_base/3653/how-do-you-right-justify-a-numeric-value
               MOVE Move-Magnitude TO Num-Magnitude
-              DISPLAY Num-Magnitude
               EVALUATE WS-DIRECTION
               WHEN "L"
-                *> DISPLAY "LEFT"
                 EVALUATE V-Horizontal
                 WHEN 0
                   IF V-Vertical > 0
@@ -64,40 +59,28 @@ PROCEDURE DIVISION.
                   SET V-Horizontal TO 0
                 END-EVALUATE
               WHEN "R"
-                *> DISPLAY "RIGHT"
                 EVALUATE V-Horizontal
                 WHEN 0
-                  *> DISPLAY "right and horizontal zero"
                   IF V-Vertical > 0
                     SET V-Horizontal TO Num-Magnitude
-                    *> DISPLAY "setting " Num-Magnitude " " V-Horizontal
                   ELSE
                     MULTIPLY -1 BY Num-Magnitude GIVING V-Horizontal
                   END-IF
                   SET V-Vertical TO 0
                 WHEN OTHER
-                  *> DISPLAY "right and horizontal non zero " V-Horizontal
                   IF V-Horizontal > 0
-                    *> display "+ve horixx"
-                    *> display "v vert " V-Vertical
                     SET V-Vertical TO Num-Magnitude
                     MULTIPLY V-Vertical BY -1 GIVING V-Vertical
-                    *> display "v vert " V-Vertical
                   ELSE
-                    *> display "-ve horixx"
                     SET V-Vertical TO Num-Magnitude
                   END-IF
-                  *> DISPLAY "now v-vertical - " V-Vertical " - should be "
-                  *> DISPLAY "related to mag - " Num-Magnitude
+
                   SET V-Horizontal TO 0
                 END-EVALUATE
               END-EVALUATE
-              *> DISPLAY "Horizontal " Horizontal " vhorizni" V-Horizontal
-              *> DISPLAY "Vertical " Vertical " v vertical " V-Vertical
+
               ADD V-Horizontal to Horizontal GIVING Horizontal
               ADD V-Vertical to Vertical GIVING Vertical
-              *> DISPLAY "Horizontal " Horizontal " vhorizni" V-Horizontal
-              *> DISPLAY "Vertical " Vertical " v vertical " V-Vertical
 
               IF Horizontal > 0 AND Vertical > 0    
                 ADD Horizontal TO Vertical GIVING Manhattan
@@ -113,8 +96,8 @@ PROCEDURE DIVISION.
                 SUBTRACT Horizontal FROM Vertical GIVING Manhattan
               END-IF
 
-              DISPLAY "vh " V-Horizontal " v-v " V-Vertical " H " Horizontal " V " Vertical " M " Manhattan
          END-READ
       END-PERFORM.
    CLOSE DIRECTIONS.
+   DISPLAY "vh " V-Horizontal " v-v " V-Vertical " H " Horizontal " V " Vertical " M " Manhattan
 STOP RUN.
